@@ -1,4 +1,4 @@
-# Mul-PheG2P[requirements.txt](https://github.com/user-attachments/files/23213193/requirements.txt)
+# Mul-PheG2P(https://github.com/user-attachments/files/23213193/requirements.txt)
 
 An explainable fusion method for multi-phenotype genotype-to-phenotype prediction
 Environment
