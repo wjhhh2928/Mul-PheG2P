@@ -13,7 +13,7 @@ pip install -r requirements.txt
 
 Data Preparation
 
-Genotype (geno): *.npy or *.csv/*.tsv, shape [N, L], numeric (float/int; internally cast to float32).
+Genotype (geno): .npy or .csv/.tsv, shape [N, L], numeric (float/int; internally cast to float32).
 
 Phenotype (pheno): *.csv, shape [N, T], one trait per column; column names are used to index source/target traits.
 
