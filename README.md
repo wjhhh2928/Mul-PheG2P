@@ -32,7 +32,6 @@ Run Direct → Pretrain → Fine-tune → Fusion → Summary in sequence:
 
 python train.py
 
-
 Configure data paths, source/target traits, input length, training hyper-params, output directory, etc. in the Config section of train.py.
 
 2) Pretraining only + Zero-shot evaluation
@@ -42,7 +41,7 @@ python train-no-fine-tuning.py
 Good for producing multi-trait pretrained weights and zero-shot evaluation on a target trait.
 
 3) Unified single-shot prediction
-# model ∈ {direct, fine_tuned, fusion}
+model ∈ {direct, fine_tuned, fusion}
 python predict.py \
   --geno ./data/gene.npy \
   --model fusion \
@@ -60,7 +59,7 @@ Data: geno_path, pheno_path, source_traits, target_trait
 
 Model: input_len, hidden_dim, conv_channels, kernel_size, stride
 
-Training: cv_folds, *_epochs, batch_size, learning_rate
+Training: cv_folds, _epochs, batch_size, learning_rate
 
 Misc: random_seed, output_dir
 
