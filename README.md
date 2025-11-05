@@ -97,6 +97,4 @@ Unstable results: seeds are fixed and cuDNN nondeterminism is disabled; further 
 
 License & Acknowledgments
 
-License: choose what fits your project (e.g., MIT / Apache-2.0).
-
 If this repo helps your research/production, please consider citing and giving a ⭐ Star.
