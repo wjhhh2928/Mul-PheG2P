@@ -95,6 +95,8 @@ NaNs in data: this repo defaults to 0-fill for features and median/mean fill for
 
 Unstable results: seeds are fixed and cuDNN nondeterminism is disabled; further stabilize by increasing data/regularization or reducing learning rate.
 
+Datasets:The Wheat599 and Wheat2000 datasets can be obtained from https://github.com/AIBreeding/DNNGP/blob/main/example-data.tgz or Baidu Netdisk link https://pan.baidu.com/s/1ovsuCCxgL2PCwB8jR-e5tA?pwd=eveq  Extraction code: eveq
+
 License & Acknowledgments
 
 If this repo helps your research/production, please consider citing and giving a ⭐ Star.
