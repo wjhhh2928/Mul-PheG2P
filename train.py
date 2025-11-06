@@ -4,7 +4,8 @@ from utils.data_loader import load_data
 from summary import summary
 import sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-
+###The tomato332 dataset is available in the SolOmics database http://solomics.agis.org.cn/tomato/ftp###
+###The Wheat599 and Wheat2000 datasets can be obtained from https://github.com/AIBreeding/DNNGP/blob/main/example-data.tgz  or https://github.com/wjhhh2928/Mul-PheG2P/dataset###
 class Config:
     # ===== Data parameters =====
     geno_path = "gene.npy"  
@@ -31,7 +32,7 @@ class Config:
     
     # ===== other parameters =====
     random_seed = 42  
-    output_dir = "./results/NKY22_DTS_PHE_experiment1"  # 
+    output_dir = "./results/NKY_DTS_PHE_experiment1"  # 
 
 def main():
     cfg = Config()
