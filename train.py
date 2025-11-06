@@ -4,7 +4,7 @@ from utils.data_loader import load_data
 from summary import summary
 import sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-###The tomato332 dataset is available in the SolOmics database http://solomics.agis.org.cn/tomato/ftp###
+###The tomato332 dataset is available in the SolOmics database http://solomics.agis.org.cn/tomato/ftp or https://github.com/wjhhh2928/Mul-PheG2P/tree/main/datasets/tomato332###
 ###The Wheat599 and Wheat2000 datasets can be obtained from https://github.com/AIBreeding/DNNGP/blob/main/example-data.tgz  or https://github.com/wjhhh2928/Mul-PheG2P/dataset###
 class Config:
     # ===== Data parameters =====
