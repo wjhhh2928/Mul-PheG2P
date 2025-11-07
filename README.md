@@ -9,13 +9,13 @@ Mul-PheG2P addresses the challenge of balancing synergistic gain with task confl
 
 ### 🌟 Key Features
 
-  * [cite\_start]**High Performance:** Outperforms or matches GBLUP and recent deep models, especially in small-sample, high-dimensional settings[cite: 11, 62].
-  * [cite\_start]**Avoids Negative Transfer:** The decoupled design successfully avoids the task conflict and negative transfer common in end-to-end coupled models[cite: 8, 71, 75].
-  * [cite\_start]**Multi-Scale Interpretability:** Provides macro-level inter-phenotype contributions via attention maps and micro-level SNP/LD block identification via SHAP[cite: 13, 48, 138, 230].
-  * [cite\_start]**Zero-Finetune Transfer:** Pretrained representations are highly transferable, enabling robust direct inference without fine-tuning, ideal for low-cost screening[cite: 14, 46, 210, 232].
+  * **High Performance:** Outperforms or matches GBLUP and recent deep models, especially in small-sample, high-dimensional settings.
+  * **Avoids Negative Transfer:** The decoupled design successfully avoids the task conflict and negative transfer common in end-to-end coupled models.
+  * **Multi-Scale Interpretability:** Provides macro-level inter-phenotype contributions via attention maps and micro-level SNP/LD block identification via SHAP.
+  * **Zero-Finetune Transfer:** Pretrained representations are highly transferable, enabling robust direct inference without fine-tuning, ideal for low-cost screening.
 
 <p align="center">
-    <img src="Imgs/Fig1.png" alt="Model" width="100%">
+    <img src="Imgs/Fig1.png" alt="Model" width="85%">
 </p>
 
 ## 🛠️ Environment
