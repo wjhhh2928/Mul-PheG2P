@@ -1,102 +1,137 @@
-# Mul-PheG2P
+# Mul-PheG2P: Decoupled Learning and Prediction-Space Fusion for Genomic Prediction
 
-An explainable fusion method for multi-phenotype genotype-to-phenotype prediction
-Environment
+[](https://www.python.org/downloads/)
+[](https://pytorch.org/)
+[](https://www.google.com/search?q=LICENSE)
+[](https://github.com/wjhhh2928/Mul-PheG2P) Official PyTorch implementation for **Mul-PheG2P**, a novel paradigm for multi-phenotype genomic prediction (GP) that achieves robust performance and interpretability.
 
-Python ≥ 3.8, PyTorch ≥ 1.10 (CUDA strongly recommended)
+[cite\_start]Mul-PheG2P addresses the challenge of balancing synergistic gain with task conflict in multi-trait prediction[cite: 7]. [cite\_start]It uses a two-stage design: (1) training trait-specific encoders to preserve unique genetic patterns, and (2) aggregating cross-trait signals via an interpretable prediction-layer fusion[cite: 8, 9, 10]. [cite\_start]This decouples trait-specific learning from cross-trait aggregation[cite: 10].
 
-Common deps: numpy, pandas, scikit-learn, scipy, matplotlib, etc.
+### Key Features
 
-Install example:
+  * [cite\_start]**High Performance:** Outperforms or matches GBLUP and recent deep models, especially in small-sample, high-dimensional settings[cite: 11].
+  * [cite\_start]**Avoids Negative Transfer:** The decoupled design successfully avoids the task conflict and negative transfer common in end-to-end coupled models[cite: 71, 75].
+  * [cite\_start]**Multi-Scale Interpretability:** Provides macro-level inter-phenotype contributions via attention maps and micro-level SNP/LD block identification via SHAP[cite: 13, 138].
+  * [cite\_start]**Zero-Finetune Transfer:** Pretrained representations are highly transferable, enabling robust direct inference without fine-tuning, ideal for low-cost screening[cite: 14, 210].
 
+## Environment
+
+Requires Python ≥ 3.8 and PyTorch ≥ 1.10. CUDA is strongly recommended.
+
+```bash
+# Clone the repository
+git clone https://github.com/wjhhh2928/Mul-PheG2P.git
+cd Mul-PheG2P
+
+# Install dependencies
 pip install -r requirements.txt
+```
 
-Data Preparation
+**Main dependencies:** `numpy`, `pandas`, `scikit-learn`, `scipy`, `matplotlib`.
 
-Genotype (geno): .npy or .csv/.tsv, shape [N, L], numeric (float/int; internally cast to float32).
+## Data Preparation
 
-Phenotype (pheno): *.csv, shape [N, T], one trait per column; column names are used to index source/target traits.
+  * **Genotype (geno):** `.npy` or `.csv`/`.tsv` file.
+      * Shape: `[N, L]` (N = samples, L = SNP loci).
+      * Internally cast to `float32`.
+  * **Phenotype (pheno):** `.csv` file.
+      * Shape: `[N, T]` (N = samples, T = traits).
+      * **Important:** Column names are used to index source and target traits.
 
-Data loading interfaces are implemented in utils/data_loader.py (example function names):
+Data loading logic is implemented in `utils/data_loader.py`.
 
-load_data(geno_path, pheno_path) -> (snp, phe)
+## Quick Start
 
-SNPDataset(X, y) adapts [B, L] tensors for the 1D-CNN encoder.
+All configurations (data paths, traits, hyperparameters) are centralized in the `Config` section of `train.py`.
 
-SNP input shape: the model accepts [B, L] or [B, 1, L]. It will auto-unsqueeze / validate the channel dimension to avoid shape errors.
+### 1\. Full Pipeline (Recommended)
 
-Quick Start
-1) One-click pipeline (recommended)
+Run the complete "Direct $\rightarrow$ Pretrain $\rightarrow$ Fine-tune $\rightarrow$ Fusion" pipeline and generate a final results summary.
 
-Run Direct → Pretrain → Fine-tune → Fusion → Summary in sequence:
-
+```bash
+# 1. Configure paths and traits in train.py
+# 2. Run the full pipeline
 python train.py
+```
 
-Configure data paths, source/target traits, input length, training hyper-params, output directory, etc. in the Config section of train.py.
+### 2\. Pre-training + Zero-Shot Evaluation
 
-2) Pretraining only + Zero-shot evaluation
+Train trait-specific encoders and evaluate their "zero-finetune" performance on a target trait.
+
+```bash
+# 1. Configure paths and traits in train-no-fine-tuning.py
+# 2. Run the pre-training and zero-shot evaluation
 python train-no-fine-tuning.py
+```
 
+### 3\. Inference with a Trained Model
 
-Good for producing multi-trait pretrained weights and zero-shot evaluation on a target trait.
+Use a trained model (e.g., `fusion`, `fine_tuned`) for prediction on new genotype data.
 
-3) Unified single-shot prediction
-model ∈ {direct, fine_tuned, fusion}
+```bash
 python predict.py \
-  --geno ./data/gene.npy \
-  --model fusion \
-  --trait "Plant height" \
-  --output ./pred_out
+    --geno ./data/gene.npy \
+    --model fusion \
+    --trait "YourTargetTrait" \
+    --output ./pred_out
+```
 
-4) Use pretrained weights to predict the target trait
+### 4\. Use Pretrained Weights to Predict a Target Trait
+
+Load pretrained models and fine-tune them on a specific target trait.
+
+```bash
+# 1. Configure paths and traits in fine_tune_predict.py
+# 2. Run the fine-tuning and prediction
 python fine_tune_predict.py
+```
 
-Configuration & Hyperparameters
+## Configuration & Hyperparameters
 
-Centralized in the Config of train.py:
+All key parameters are centralized in the `Config` section of `train.py`:
 
-Data: geno_path, pheno_path, source_traits, target_trait
+  * **Data:** `geno_path`, `pheno_path`, `source_traits`, `target_trait`
+  * **Model:** `input_len`, `hidden_dim`, `conv_channels`, `kernel_size`, `stride`
+  * **Training:** `cv_folds`, `pre_epochs`, `ft_epochs`, `fu_epochs`, `batch_size`, `learning_rate`
+  * **Misc:** `random_seed`, `output_dir`
 
-Model: input_len, hidden_dim, conv_channels, kernel_size, stride
+## Outputs & Visualization
 
-Training: cv_folds, _epochs, batch_size, learning_rate
+Results are saved under `./results/` in a directory named with a timestamp and the target trait.
 
-Misc: random_seed, output_dir
+  * `Direct/`: `direct_{trait}.pth`, `direct_res.csv`
+  * `Pretrain/`: `pretrain_{Trait}.png`, `pretrained_target_res.csv`
+  * `Fine-tune/`: `fine_tuned_{trait}.pth`, `prediction_*.csv`
+  * `Fusion/`:
+      * `fusion_model_embedding.pth` (Final model)
+      * `fusion_attention_weights.png`/`.csv` (Macro-level interpretability)
+      * `test_true_vs_pred.csv` (Final predictions)
+  * `results_summary.csv`: Aggregated metrics for all models.
 
-You may also override via args dictionaries in sub-modules. In fusion.py, you can additionally set fusion_dropout, attn_entropy_lambda, weight_decay, test_size, val_size, etc.
+## Datasets
 
-Outputs & Visualization
+  * [cite\_start]**Wheat-599 & Wheat-2000:** Available from the [DNNGP repository](https://github.com/AIBreeding/DNNGP/blob/main/example-data.tgz) [cite: 329] or Baidu Netdisk (code: `eveq`): [link](https://pan.baidu.com/s/1ovsuCCxgL2PCwB8jR-e5tA?pwd=eveq)
+  * [cite\_start]**Tomato-332:** Available from the [SolOmics database](http://solomics.agis.org.cn/tomato/ftp) or this repository (`/datasets/tomato332`)[cite: 327].
+  * [cite\_start]**MaizeGEP:** Data is available from the corresponding author (K.W.) upon reasonable request[cite: 331].
 
-Typical outputs under ./results/...:
+## Citation
 
-Direct: direct_{trait}.pth, direct_res.csv
+If you find this work useful, please consider giving a ⭐ and citing:
 
-Pretrain: pretrain_{Trait}.pth (with config/train_idx/heldout_idx), pretrained_target_res.csv, pretrained_target_true_vs_pred.csv
+> Wang, J., Zhang, Y., Li, B., Piao, X., Zhao, X., Zhang, D., Wang, A., Zhang, B., & Wang, K. (2025). Mul-PheG2P: Decoupled learning and prediction-space fusion enables robust and interpretable multi-phenotype genomic prediction. *[Journal Name]*
 
-Fine-tune: fine_tuned_{trait}.pth, prediction CSVs, and attention-weight plots
+```bibtex
+@article{wang2025mulpheg2p,
+  title={{Mul-PheG2P: Decoupled learning and prediction-space fusion enables robust and interpretable multi-phenotype genomic prediction}},
+  author={Wang, Jiahui and Zhang, Yong and Li, Bo and Piao, Xinglin and Zhao, Xiangyu and Zhang, Dongfeng and Wang, Aiwen and Zhang, Bob and Wang, Kaiyi},
+  journal={[Journal Name]},
+  year={2025},
+  volume={XX},
+  pages={XXXX--XXXX},
+  doi={[YOUR_PAPER_DOI_HERE]}
+}
+```
 
-Fusion: fusion_model_embedding.pth, fusion_attention_weights.png/.csv, fusion_val_best.csv, test_true_vs_pred.csv
+## License
 
-Summary: results_summary.csv (Task × Model aggregated mean/variance)
-
-Models & Interfaces
-
-SNPEncoderCNN: 1D convolutions + adaptive pooling + FC → hidden_dim; robust to input shapes (auto-adds channel dim).
-
-MetaTraitFusion: takes [B, num_traits] trait-level predictions/embeddings, learns attention weights for weighted summation, and regresses to the target trait.
-
-FAQ
-
-Shape mismatch: ensure SNP inputs are [B, L] or [B, 1, L]; if [B, 1, 1, L], it will be auto-squeezed in forward.
-
-Out of memory: reduce batch_size; in Fusion, consider lowering hidden_dim and/or number of source traits; or test the zero-shot pipeline on CPU first.
-
-NaNs in data: this repo defaults to 0-fill for features and median/mean fill for targets—verify the missingness mechanism and align samples upstream if possible.
-
-Unstable results: seeds are fixed and cuDNN nondeterminism is disabled; further stabilize by increasing data/regularization or reducing learning rate.
-
-Datasets: The Wheat599 and Wheat2000 datasets can be obtained from https://github.com/AIBreeding/DNNGP/blob/main/example-data.tgz or Baidu Netdisk link https://pan.baidu.com/s/1ovsuCCxgL2PCwB8jR-e5tA?pwd=eveq  Extraction code: eveq
-
-License & Acknowledgments
-
-If this repo helps your research/production, please consider citing and giving a ⭐ Star.
+This project is licensed under the MIT License. See the [LICENSE](https://www.google.com/search?q=LICENSE) file for details.
