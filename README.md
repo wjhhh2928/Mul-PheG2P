@@ -95,8 +95,8 @@ python fine_tune_predict.py
 All key parameters are centralized in the `Config` section of `train.py`:
 
   * **Data:** `geno_path`, `pheno_path`, `source_traits`, `target_trait`
-  * [cite\_start]**Model:** `input_len`, `hidden_dim`, `conv_channels`, `kernel_size`, `stride` [cite: 266, 267, 276]
-  * [cite\_start]**Training:** `cv_folds`, `pre_epochs`, `ft_epochs`, `fu_epochs`, `batch_size`, `learning_rate` [cite: 322]
+  * **Model:** `input_len`, `hidden_dim`, `conv_channels`, `kernel_size`, `stride`
+  * **Training:** `cv_folds`, `pre_epochs`, `ft_epochs`, `fu_epochs`, `batch_size`, `learning_rate`
   * **Misc:** `random_seed`, `output_dir`
 
 ## 📈 Outputs & Visualization
@@ -108,33 +108,22 @@ Results are saved under `./results/` in a directory named with a timestamp and t
   * `Fine-tune/`: `fine_tuned_{trait}.pth`, `prediction_*.csv`
   * `Fusion/`:
       * `fusion_model_embedding.pth` (Final model)
-      * [cite\_start]`fusion_attention_weights.png`/`.csv` (Macro-level interpretability [cite: 141])
+      * `fusion_attention_weights.png`/`.csv` (Macro-level interpretability)
       * `test_true_vs_pred.csv` (Final predictions)
   * `results_summary.csv`: Aggregated metrics for all models.
 
 ## 🗂️ Datasets
 
-  * [cite\_start]**Wheat-599 & Wheat-2000:** Available from the [DNNGP repository](https://github.com/AIBreeding/DNNGP/blob/main/example-data.tgz) [cite: 329] or Baidu Netdisk (code: `eveq`): [link](https://pan.baidu.com/s/1ovsuCCxgL2PCwB8jR-e5tA?pwd=eveq)
-  * [cite\_start]**Tomato-332:** Available from the [SolOmics database](http://solomics.agis.org.cn/tomato/ftp) [cite: 327] or this repository (`/datasets/tomato332`).
-  * [cite\_start]**MaizeGEP:** Data is available from the corresponding author (K.W.) upon reasonable request[cite: 331].
+  * **Wheat-599 & Wheat-2000:** Available from the [DNNGP repository](https://github.com/AIBreeding/DNNGP/blob/main/example-data.tgz) or Baidu Netdisk (code: `eveq`): [link](https://pan.baidu.com/s/1ovsuCCxgL2PCwB8jR-e5tA?pwd=eveq)
+  * **Tomato-332:** Available from the [SolOmics database](http://solomics.agis.org.cn/tomato/ftp) or this repository (`/datasets/tomato332`).
+  * **MaizeGEP:** Data is available from the corresponding author (K.W.) upon reasonable request.
 
 ## 🎓 Citation
 
-[cite\_start]If you find this work useful, please consider giving a ⭐ and citing[cite: 15, 50]:
+If you find this work useful, please consider giving a ⭐ and citing:
 
-> Wang, J., Zhang, Y., Li, B., Piao, X., Zhao, X., Zhang, D., Wang, A., Zhang, B., & Wang, K. (2025). Mul-PheG2P: Decoupled learning and prediction-space fusion enables robust and interpretable multi-phenotype genomic prediction. *[Journal Name]*
+> Wang, J., Zhang, Y., Li, B., Piao, X., Zhao, X., Zhang, D., Wang, A., Zhang, B., & Wang, K. (2025). Mul-PheG2P: Decoupled learning and prediction-space fusion enables robust and interpretable multi-phenotype genomic prediction.
 
-```bibtex
-@article{wang2025mulpheg2p,
-  title={{Mul-PheG2P: Decoupled learning and prediction-space fusion enables robust and interpretable multi-phenotype genomic prediction}},
-  author={Wang, Jiahui and Zhang, Yong and Li, Bo and Piao, Xinglin and Zhao, Xiangyu and Zhang, Dongfeng and Wang, Aiwen and Zhang, Bob and Wang, Kaiyi},
-  journal={[Journal Name]},
-  year={2025},
-  volume={XX},
-  pages={XXXX--XXXX},
-  doi={[YOUR_PAPER_DOI_HERE]}
-}
-```
 
 ## 📄 License
 
