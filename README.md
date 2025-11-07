@@ -104,7 +104,7 @@ All key parameters are centralized in the `Config` section of `train.py`:
 Results are saved under `./results/` in a directory named with a timestamp and the target trait.
 
   * `Direct/`: `direct_{trait}.pth`, `direct_res.csv`
-  * `Pretrain/`: `pretrain_{Trait}.png`, `pretrained_target_res.csv`
+  * `Pretrain/`: `pretrain_{Trait}.pth`, `pretrained_target_res.csv`
   * `Fine-tune/`: `fine_tuned_{trait}.pth`, `prediction_*.csv`
   * `Fusion/`:
       * `fusion_model_embedding.pth` (Final model)
