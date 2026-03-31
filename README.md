@@ -114,9 +114,9 @@ Results are saved under `./results/` in a directory named with a timestamp and t
 
 ## 🗂️ Datasets
 
-  * **Wheat-599 & Wheat-2000:** Available from the [DNNGP repository](https://github.com/AIBreeding/DNNGP/blob/main/example-data.tgz) or Baidu Netdisk (code: `eveq`): [link](https://pan.baidu.com/s/1ovsuCCxgL2PCwB8jR-e5tA?pwd=eveq)
+  * **Wheat-599 & Wheat-2000:** Available from the [DNNGP repository](https://github.com/AIBreeding/DNNGP/blob/main/example-data.tgz) or (https://github.com/AIBreeding/DNNGP?tab=readme-ov-file   or https://github.com/gdlc/BGLR-R/blob/master/data/wheat.RData)Baidu Netdisk (code: `eveq`): [link](https://pan.baidu.com/s/1ovsuCCxgL2PCwB8jR-e5tA?pwd=eveq)
   * **Tomato-332:** Available from the [SolOmics database](http://solomics.agis.org.cn/tomato/ftp) or this repository (`/datasets/tomato332`).
-  * **MaizeGEP:** Data is available from the corresponding author (K.W.) upon reasonable request.
+  * **MaizeGEP:** Data is available from the (http://user.ebreed.cn:9992/scb/).
 
 ## 🎓 Citation
 
