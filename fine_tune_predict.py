@@ -52,7 +52,7 @@ def visualize_attention(weights, source_traits, save_path):
 
 
 # ============================================================
-# key：Fine-tune + Predict
+# Fine-tune + Predict
 # ============================================================
 def fine_tune_and_predict(snp, phe, target_trait, source_traits, args):
 
@@ -101,7 +101,7 @@ def fine_tune_and_predict(snp, phe, target_trait, source_traits, args):
     for trait in source_traits:
         ckpt_path = os.path.join(pre_dir, f'pretrain_{_safe_filename(trait)}.pth')
         if not os.path.exists(ckpt_path):
-            print(f"⚠️ Skip: Not found {ckpt_path}")
+            print(f" Skip: Not found {ckpt_path}")
             continue
         checkpoint = torch.load(ckpt_path, map_location='cpu')
         model = SNPEncoderCNN(input_len, conv_channels, kernel_size, stride, hidden_dim).to(device)
@@ -153,9 +153,9 @@ def fine_tune_and_predict(snp, phe, target_trait, source_traits, args):
     mask_tr = np.isfinite(y_train)
     mask_va = np.isfinite(y_val)
     if mask_tr.sum() < len(mask_tr):
-        print(f"⚠️ The training set removed {len(mask_tr) - mask_tr.sum()} samples with y=NaN")
+        print(f" The training set removed {len(mask_tr) - mask_tr.sum()} samples with y=NaN")
     if mask_va.sum() < len(mask_va):
-        print(f"⚠️ The validation set removed {len(mask_va) - mask_va.sum()} samples with y=NaN")
+        print(f" The validation set removed {len(mask_va) - mask_va.sum()} samples with y=NaN")
     X_train, y_train = X_train[mask_tr], y_train[mask_tr]
     X_val,   y_val   = X_val[mask_va],   y_val[mask_va]
 
@@ -320,12 +320,12 @@ if __name__ == "__main__":
     print("=== Fine-tune & Predict (Attention Fusion) ===")
 
     # ====== Data path ======
-    geno_path   = "/home/zcy/zyq/GE_T/new_data/bjut/gene_new.npy"
-    pheno_path  = "/home/zcy/zyq/GE_T/new_data/bjut/phe_new_wusample.csv"
+    geno_path   = "gene.npy"
+    pheno_path  = "phenotype.csv"
 
     
-    pretrain_dir = "/mnt/mydisk/zyq/GE_T/trans_learning2/out_puts"  #
-    output_dir   = "/mnt/mydisk/zyq/GE_T/trans_learning2/results"   # 
+    pretrain_dir = "./out_puts"  #
+    output_dir   = "./results"   # 
 
     # ====== Load Data ======
     snp, phe = load_data(geno_path, pheno_path)
