@@ -1,53 +1,45 @@
 import os
 from modules import direct, fusion, pretrain, fine_tune
 from utils.data_loader import load_data
+from utils.cv_manager import GlobalCVManager  # 引入我们刚刚写的管理器
 from summary import summary
 import sys
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-'''
-    The tomato332 dataset is available in the SolOmics database http://solomics.agis.org.cn/tomato/ftp or https://github.com/wjhhh2928/Mul-PheG2P/tree/main/datasets/tomato332
-    Wang, H. et al. Cropformer: an interpretable deep learning framework for crop genomic prediction. Plant Commun. 6, 101223 (2025).
-    
-    The Wheat599 and Wheat2000 datasets can be obtained from https://github.com/AIBreeding/DNNGP/blob/main/example-data.tgz
-    Wang K., Abid M.A., Rasheed A., Crossa J., Hearne S., Li H. DNNGP, a deep neural network-based method for genomic prediction using multi-omics data in plants. Molecular Plant 16, 279–293 (2023).
-'''
 class Config:
-    # ===== Data parameters =====
-    geno_path = "gene.npy"  
-    pheno_path = "phe.csv"  
-    source_traits = ["Day to siking"]    # phenotype
-    target_trait = "Day to siking"    # phenotype
-     
-    # ===== Model parameters =====
-    input_len = 512  
-    hidden_dim = 128  
-    conv_channels = 32  
-    kernel_size = 7  
-    stride = 2  
-    # ===== other parameters =====
-    cv_folds = 5  
-    
-    # ===== training parameters =====
-    pretrain_epochs = 300  
+    geno_path = "gene.npy"
+    pheno_path = "phenptype.csv"
+    source_traits = ["phenotype 1"]       
+    target_trait = "phenotype 1"
+  
+    input_len = 33709
+    hidden_dim = 128
+    conv_channels = 32
+    kernel_size = 7
+    stride = 2
+    cv_folds = 5
+
+    pretrain_epochs = 300 
     finetune_epochs = 300  
-    fusion_epochs = 200 
-    direct_epochs = 300  
-    batch_size = 32  
-    learning_rate = 0.001  
-    
-    # ===== other parameters =====
-    random_seed = 42  
-    output_dir = "./results/NKY_DTS_PHE_experiment1"  # 
+    fusion_epochs = 200  
+    direct_epochs = 200  
+    batch_size = 32
+    learning_rate = 0.001
+
+    random_seed = 42
+    output_dir = "./results"    
+
 
 def main():
     cfg = Config()
-    
-   
     os.makedirs(cfg.output_dir, exist_ok=True)
     
-    
+   
     snp, phe = load_data(cfg.geno_path, cfg.pheno_path)
+    n_samples = len(snp)
+    
+    
+    cv_manager = GlobalCVManager(n_samples=n_samples, n_splits=cfg.cv_folds, seed=cfg.random_seed)
+    cv_manager.save_indices(cfg.output_dir) 
     
     
     args = {
@@ -66,26 +58,46 @@ def main():
         'seed': cfg.random_seed,
         'output': cfg.output_dir
     }
-    
-      
-    print("\n=== Global Parameter Verification ===")
-    print("seed:", args['seed'])
-    print("batch_size:", args['batch_size'])
 
-    print('=== 1. Direct Prediction ===')
-    direct.train(snp, phe, cfg.target_trait, args)
+    print("\n=== Starting Global 5-Fold Cross Validation Pipeline ===")
     
-    print('=== 2. Pretraining ===')
-    pretrain.train(snp, phe, cfg.source_traits, args)
     
-    print('=== 3. Fine-tuning ===')
-    fine_tune.train(snp, phe, cfg.target_trait, cfg.source_traits, args)
-    
-    print('=== 4. Fusion ===')
-    fusion.train(snp, phe, cfg.target_trait, cfg.source_traits, args)
-    
-    print('=== 5. Summary ===')
-    summary(cfg.output_dir)
+    for fold_idx in range(cfg.cv_folds):
+        fold_data = cv_manager.get_fold(fold_idx)
+        fold_num = fold_data['fold']
+        train_idx = fold_data['train_idx']
+        val_idx = fold_data['val_idx']
+        test_idx = fold_data['test_idx']
+        
+        print(f"\n" + "="*40)
+        print(f"Executing Fold {fold_num}/{cfg.cv_folds}")
+        print(f"Train: {len(train_idx)}, Val: {len(val_idx)}, Test: {len(test_idx)}")
+        print("="*40)
+        
+        
+        fold_output_dir = os.path.join(cfg.output_dir, f"fold_{fold_num}")
+        os.makedirs(fold_output_dir, exist_ok=True)
+        args['output'] = fold_output_dir  
+        
+        
+        
+        print(f'=== [Fold {fold_num}] 1. Direct Prediction (Baseline) ===')
+       
+        direct.train(snp, phe, cfg.target_trait, train_idx, val_idx, test_idx, args)
+        
+        print(f'=== [Fold {fold_num}] 2. Pretraining ===')
+        pretrain.train(snp, phe, cfg.source_traits, train_idx, val_idx, args)
+        
+        print(f'=== [Fold {fold_num}] 3. Fine-tuning ===')
+        fine_tune.train(snp, phe, cfg.target_trait, cfg.source_traits, train_idx, val_idx, test_idx, args)
+        
+        print(f'=== [Fold {fold_num}] 4. Fusion ===')
+       
+        fusion.train(snp, phe, cfg.target_trait, cfg.source_traits, train_idx, val_idx, test_idx, args)
+        
+   
+    print('\n=== Pipeline Completed. Consolidating Results ===')
+    summary(cfg.output_dir, cv_folds=cfg.cv_folds)
 
 if __name__ == "__main__":
     main()
