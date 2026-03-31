@@ -1,7 +1,7 @@
 import os
 from modules import direct, fusion, pretrain, fine_tune
 from utils.data_loader import load_data
-from utils.cv_manager import GlobalCVManager  # 引入我们刚刚写的管理器
+from utils.cv_manager import GlobalCVManager  
 from summary import summary
 import sys
 
