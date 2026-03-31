@@ -15,7 +15,7 @@ Mul-PheG2P addresses the challenge of balancing synergistic gain with task confl
   * **Zero-Finetune Transfer:** Pretrained representations are highly transferable, enabling robust direct inference without fine-tuning, ideal for low-cost screening.
 
 <p align="center">
-    <img src="Imgs/Fig1.png" alt="Model" width="85%">
+    <img src="Imgs/Fig1_.png" alt="Model" width="85%">
 </p>
 
 ## 🛠️ Environment
